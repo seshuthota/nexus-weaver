@@ -4,4 +4,4 @@ metadata:
   name: hello-nexus
   namespace: nexus-weaver
 spec:
-  replicas: 1  # Reduce replicas for dev environment to save resources 
+  replicas: 2  # Increased replicas to test GitOps workflow 
