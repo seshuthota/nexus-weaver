@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: file:///home/seshu/Documents/Java/nexus-weaver
+    repoURL: https://github.com/seshuthota/nexus-weaver.git
     targetRevision: HEAD
     path: gitops/overlays/dev
   destination:
