@@ -1,0 +1,46 @@
+# This describes an application deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-nexus
+  namespace: nexus-weaver
+  labels:
+    app: hello-nexus
+spec:
+  replicas: 2                       # Only 2 copies to save RAM
+  selector:
+    matchLabels:
+      app: hello-nexus
+  template:
+    metadata:
+      labels:
+        app: hello-nexus
+    spec:
+      containers:
+      - name: hello-container
+        image: nginx:alpine         # Alpine is much smaller
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "32Mi"          # Only 32 megabytes of RAM
+            cpu: "25m"              # 25 millicores (0.025 CPU cores)
+          limits:
+            memory: "64Mi"          # Maximum 64 megabytes of RAM
+            cpu: "50m"              # Maximum 50 millicores
+
+---
+# This creates a Service (how other things talk to your app)
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-nexus-service
+  namespace: nexus-weaver
+spec:
+  selector:
+    app: hello-nexus
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

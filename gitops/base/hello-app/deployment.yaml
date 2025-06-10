@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-nexus
+  namespace: nexus-weaver
+  labels:
+    app: hello-nexus
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-nexus
+  template:
+    metadata:
+      labels:
+        app: hello-nexus
+    spec:
+      containers:
+      - name: hello-container
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "64Mi"
+            cpu: "50m" 

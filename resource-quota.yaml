@@ -1,0 +1,30 @@
+# This prevents any single application from using too much RAM/CPU
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: nexus-weaver-quota
+  namespace: nexus-weaver
+spec:
+  hard:
+    requests.cpu: "2"           # Total CPU requests for all pods
+    requests.memory: 2Gi        # Total memory requests for all pods  
+    limits.cpu: "4"             # Total CPU limits for all pods
+    limits.memory: 4Gi          # Total memory limits for all pods
+    pods: "20"                  # Maximum number of pods
+
+---
+# This sets default limits for pods that don't specify them
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: nexus-weaver-limits
+  namespace: nexus-weaver
+spec:
+  limits:
+  - default:                    # Default limits if not specified
+      cpu: "200m"               # 0.2 CPU cores
+      memory: "256Mi"           # 256 megabytes
+    defaultRequest:             # Default requests if not specified
+      cpu: "100m"               # 0.1 CPU cores  
+      memory: "128Mi"           # 128 megabytes
+    type: Container
