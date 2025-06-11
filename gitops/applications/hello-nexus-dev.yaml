@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: Application                    # This is an ArgoCD resource type
 metadata:
-  name: hello-nexus-dev
-  namespace: argocd
+  name: hello-nexus-dev             # Name of your application in ArgoCD
+  namespace: argocd                 # Must be in argocd namespace
 spec:
-  project: default
-  source:
+  project: default                  # ArgoCD project (like a workspace)
+  source:                          # WHERE to get the code
     repoURL: https://github.com/seshuthota/nexus-weaver.git
-    targetRevision: HEAD
-    path: gitops/overlays/dev
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: nexus-weaver
-  syncPolicy:
+    targetRevision: HEAD            # Which branch/tag (HEAD = latest main)
+    path: gitops/overlays/dev      # Which folder in the repo
+  destination:                     # WHERE to deploy
+    server: https://kubernetes.default.svc  # This cluster
+    namespace: nexus-weaver        # Target namespace
+  syncPolicy:                      # HOW to deploy
     automated:
-      prune: true
-      selfHeal: true
+      prune: true                  # Delete resources removed from Git
+      selfHeal: true              # Fix manual changes back to Git state
     syncOptions:
-      - CreateNamespace=true 
+      - CreateNamespace=true      # Create namespace if it doesn't exist
