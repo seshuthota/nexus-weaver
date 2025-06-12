@@ -1,0 +1,125 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  
+spring:
+  application:
+    name: market-data-ingestion
+  
+  # Jackson configuration for JSON processing
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+# Apache Camel Configuration
+camel:
+  springboot:
+    name: market-data-ingestion-camel
+    main-run-controller: true
+    jmx-enabled: true
+    
+  # Component configurations
+  component:
+    websocket:
+      port: 8081
+    jetty:
+      max-threads: 200
+      min-threads: 8
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,camel
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles:
+        http.server.requests: 0.5,0.95,0.99
+      percentiles-histogram:
+        http.server.requests: true
+
+# Logging configuration
+logging:
+  level:
+    com.nexusweaver: DEBUG
+    org.apache.camel: INFO
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Market Data Configuration
+market-data:
+  simulation:
+    enabled: true
+    interval: 5000  # milliseconds (5 seconds)
+    symbols:
+      - AAPL
+      - GOOGL
+      - MSFT
+      - AMZN
+      - TSLA
+  
+  validation:
+    max-price: 1000000
+    max-volume: 10000000
+    
+  processing:
+    thread-pool-size: 20
+    max-queue-size: 10000
+
+# WebSocket configuration
+websocket:
+  market-data:
+    port: 8081
+    max-connections: 1000
+
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+      
+logging:
+  level:
+    com.nexusweaver: DEBUG
+    org.apache.camel: DEBUG
+
+market-data:
+  simulation:
+    interval: 10000  # Slower in dev
+
+---
+# Production profile  
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    com.nexusweaver: INFO
+    org.apache.camel: WARN
+    root: WARN
+
+market-data:
+  simulation:
+    interval: 1000   # Faster in production
+    
+server:
+  tomcat:
+    max-threads: 400
+    max-connections: 8192 

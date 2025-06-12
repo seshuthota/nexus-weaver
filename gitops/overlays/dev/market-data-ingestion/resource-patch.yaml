@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: market-data-ingestion
+spec:
+  template:
+    spec:
+      containers:
+      - name: market-data-ingestion
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "dev"
+        - name: JAVA_OPTS
+          value: "-XX:MaxRAMPercentage=70.0 -Xms64m -Xmx200m" 

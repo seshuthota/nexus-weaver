@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: market-data-ingestion-dev
+
+namespace: nexus-weaver
+
+resources:
+- ../../../base/market-data-ingestion
+
+patchesStrategicMerge:
+- replica-patch.yaml
+- resource-patch.yaml
+
+commonLabels:
+  environment: dev
+
+namePrefix: dev-
+
+images:
+- name: nexus-weaver/market-data-ingestion
+  newTag: dev-latest 

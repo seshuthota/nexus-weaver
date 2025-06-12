@@ -1,0 +1,6 @@
+com/nexusweaver/routes/MarketDataIngestionRoute.class
+com/nexusweaver/MarketDataIngestionApplication.class
+com/nexusweaver/processors/MarketDataProcessor.class
+com/nexusweaver/processors/MessageValidator.class
+com/nexusweaver/model/MarketDataEvent.class
+com/nexusweaver/model/MarketDataEvent$MarketDataEventBuilder.class

@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: market-data-ingestion-dev
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: market-data-ingestion
+    app.kubernetes.io/component: camel-service
+    environment: dev
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/seshuthota/nexus-weaver.git
+    targetRevision: HEAD
+    path: gitops/overlays/dev/market-data-ingestion
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nexus-weaver
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 3 
