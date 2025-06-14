@@ -20,4 +20,4 @@ namePrefix: dev-
 
 images:
 - name: nexus-weaver/market-data-ingestion
-  newTag: dev-latest 
+  newTag: clustered-v5 
