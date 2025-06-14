@@ -20,7 +20,7 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
-        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/path: "/api/actuator/prometheus"
     spec:
       serviceAccountName: market-data-ingestion-sa
       containers:
@@ -51,7 +51,7 @@ spec:
             cpu: "500m"
         livenessProbe:
           httpGet:
-            path: /actuator/health/liveness
+            path: /api/actuator/health/liveness
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 30
@@ -59,7 +59,7 @@ spec:
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /actuator/health/readiness
+            path: /api/actuator/health/readiness
             port: 8080
           initialDelaySeconds: 30
           periodSeconds: 10
