@@ -25,7 +25,7 @@ spec:
       serviceAccountName: market-data-ingestion-sa
       containers:
       - name: market-data-ingestion
-        image: nexus-weaver/market-data-ingestion:clustered-v4
+        image: nexus-weaver/market-data-ingestion:clustered-v5
         ports:
         - containerPort: 8080
           name: http

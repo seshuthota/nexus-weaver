@@ -12,11 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * Market Data Ingestion Route
  * 
- * Handles multiple data sources with proper clustering:
- * - Timer-based simulated market data (CLUSTERED - only one instance active)
- * - Direct processing pipeline (all instances process)
- * - WebSocket feeds (CLUSTERED - only one instance connects)
- * - TCP feeds (CLUSTERED - only one instance connects)
+ * Simplified clustering test with timer route only
  */
 @Slf4j
 @Component
@@ -51,28 +47,6 @@ public class MarketDataIngestionRoute extends RouteBuilder {
                 exchange.getIn().setHeader("source", "SIMULATOR");
                 exchange.getIn().setHeader("symbol", event.getSymbol());
                 exchange.getIn().setHeader("generatingPod", System.getenv("HOSTNAME"));
-            })
-            .to("direct:process-market-data");
-
-        // CLUSTERED: FIX Protocol ingestion (only one pod connects to FIX gateway)
-        from("master:fix-cluster:mina:tcp://{{fix.gateway.host:localhost}}:{{fix.gateway.port:9878}}?codec=#fixCodec&sync=false")
-            .routeId("fix-ingestion-clustered")
-            .log("🏆 MASTER INSTANCE: Received FIX message on pod ${env:HOSTNAME}")
-            .process(exchange -> {
-                // FIX message processing
-                exchange.getIn().setHeader("source", "FIX");
-                exchange.getIn().setHeader("receivingPod", System.getenv("HOSTNAME"));
-            })
-            .to("direct:process-market-data");
-
-        // CLUSTERED: HTTP REST endpoint (only one pod listens)
-        from("master:rest-cluster:netty-http:http://0.0.0.0:8082/market-data?httpMethodRestrict=POST")
-            .routeId("rest-market-data-clustered")
-            .log("🏆 MASTER INSTANCE: Received REST market data on pod ${env:HOSTNAME}")
-            .unmarshal().json(JsonLibrary.Jackson)
-            .process(exchange -> {
-                exchange.getIn().setHeader("source", "REST_API");
-                exchange.getIn().setHeader("receivingPod", System.getenv("HOSTNAME"));
             })
             .to("direct:process-market-data");
 
@@ -121,17 +95,15 @@ public class MarketDataIngestionRoute extends RouteBuilder {
         // Output routes - all pods can publish (load balanced)
         from("direct:market-data-output")
             .routeId("market-data-output")
-            .log("📤 PUBLISHING: Market data Symbol=${header.symbol}, Price=${body.price}, Volume=${body.volume} from pod ${env:HOSTNAME}")
+            .log("📤 OUTPUT: Market data Symbol=${header.symbol}, Price=${body.price}, Volume=${body.volume} from pod ${env:HOSTNAME}")
             .marshal().json(JsonLibrary.Jackson)
-            .to("rabbitmq:market-prices-stream?hostname={{rabbitmq.hostname}}&port=5672&username={{rabbitmq.username}}&password={{rabbitmq.password}}&routingKey=market.data")
-            .log("✅ PUBLISHED: To RabbitMQ stream market-prices-stream from pod ${env:HOSTNAME}");
+            .to("log:market-data-output?level=INFO&showBody=true");
 
         from("direct:trade-output")
             .routeId("trade-output")
-            .log("📤 PUBLISHING: Trade data from pod ${env:HOSTNAME}")
+            .log("📤 OUTPUT: Trade data from pod ${env:HOSTNAME}")
             .marshal().json(JsonLibrary.Jackson)
-            .to("rabbitmq:trade-executions-stream?hostname={{rabbitmq.hostname}}&port=5672&username={{rabbitmq.username}}&password={{rabbitmq.password}}&routingKey=trade.execution")
-            .log("✅ PUBLISHED: To RabbitMQ stream trade-executions-stream from pod ${env:HOSTNAME}");
+            .to("log:trade-output?level=INFO&showBody=true");
 
         from("direct:unknown-output")
             .routeId("unknown-output")
