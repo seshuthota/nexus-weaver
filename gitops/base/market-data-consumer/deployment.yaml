@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: market-data-consumer
+  namespace: nexus-weaver
+  labels:
+    app: market-data-consumer
+    version: v1
+spec:
+  replicas: 1  # Single replica for development
+  selector:
+    matchLabels:
+      app: market-data-consumer
+  template:
+    metadata:
+      labels:
+        app: market-data-consumer
+        version: v1
+    spec:
+      containers:
+      - name: market-data-consumer
+        image: nexus-weaver/market-data-consumer:dev-latest
+        ports:
+        - containerPort: 8081
+          name: http
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "dev"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /api/actuator/health
+            port: 8081
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /api/actuator/health
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: market-data-consumer-service
+  namespace: nexus-weaver
+  labels:
+    app: market-data-consumer
+spec:
+  selector:
+    app: market-data-consumer
+  ports:
+  - port: 8081
+    targetPort: 8081
+    name: http
+  type: ClusterIP 

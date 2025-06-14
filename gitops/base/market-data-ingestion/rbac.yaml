@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: market-data-ingestion-sa
+  namespace: nexus-weaver
+  labels:
+    app: market-data-ingestion
+    component: camel-service
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: market-data-ingestion-cluster-role
+  namespace: nexus-weaver
+rules:
+# Leader election permissions
+- apiGroups: ["coordination.k8s.io"]
+  resources: ["leases"]
+  verbs: ["get", "list", "create", "update", "patch", "watch", "delete"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "create", "update", "patch", "watch", "delete"]
+# Pod information for clustering
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: market-data-ingestion-cluster-binding
+  namespace: nexus-weaver
+subjects:
+- kind: ServiceAccount
+  name: market-data-ingestion-sa
+  namespace: nexus-weaver
+roleRef:
+  kind: Role
+  name: market-data-ingestion-cluster-role
+  apiGroup: rbac.authorization.k8s.io 

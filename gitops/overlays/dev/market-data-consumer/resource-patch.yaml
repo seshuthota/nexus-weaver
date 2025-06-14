@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: market-data-consumer
+spec:
+  template:
+    spec:
+      containers:
+      - name: market-data-consumer
+        resources:
+          requests:
+            memory: "128Mi"  # Reduced for dev
+            cpu: "50m"       # Reduced for dev
+          limits:
+            memory: "256Mi"  # Reduced for dev
+            cpu: "100m"      # Reduced for dev 

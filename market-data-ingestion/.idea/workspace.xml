@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b00dc8e6-17c3-4cdf-8525-e39e7153b011" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../gitops/base/market-data-ingestion/deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../gitops/base/market-data-ingestion/deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gitops/base/market-data-ingestion/kustomization.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../gitops/base/market-data-ingestion/kustomization.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../implementation-plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/../implementation-plan.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nexusweaver/routes/MarketDataIngestionRoute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nexusweaver/routes/MarketDataIngestionRoute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nexusweaver/routes/MarketDataIngestionRoute.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nexusweaver/routes/MarketDataIngestionRoute.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/market-data-ingestion-1.0.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/market-data-ingestion-1.0.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/market-data-ingestion-1.0.0-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/market-data-ingestion-1.0.0-SNAPSHOT.jar.original" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2yV8tQRG40FLR0oDXflaIccKjWe" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/seshu/Documents/Java/nexus-weaver/market-data-ingestion"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b00dc8e6-17c3-4cdf-8525-e39e7153b011" name="Changes" comment="" />
+      <created>1749908595101</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749908595101</updated>
+    </task>
+    <servers />
+  </component>
+</project>

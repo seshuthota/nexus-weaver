@@ -1,0 +1,109 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+  
+spring:
+  application:
+    name: market-data-consumer
+  
+  # Jackson configuration for JSON processing
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+# RabbitMQ Configuration - SAME AS PRODUCER
+rabbitmq:
+  hostname: nexus-rabbitmq
+  port: 5672
+  username: default_user_RABBITMQ_DEFAULT_USER
+  password: default_pass_RABBITMQ_DEFAULT_PASS
+
+# Apache Camel Configuration  
+camel:
+  springboot:
+    name: market-data-consumer-camel
+    main-run-controller: true
+    jmx-enabled: true
+    
+  # Component configurations for clustering
+  component:
+    rabbitmq:
+      connection-factory: "#connectionFactory"
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,camel
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles:
+        http.server.requests: 0.5,0.95,0.99
+      percentiles-histogram:
+        http.server.requests: true
+
+# Logging configuration
+logging:
+  level:
+    com.nexusweaver: DEBUG
+    org.apache.camel: INFO
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - CONSUMER [${POD_NAME:unknown}] - %msg%n"
+
+# Consumer-specific configuration
+consumer:
+  processing:
+    thread-pool-size: 10
+    batch-size: 50
+    concurrent-consumers: 5
+    
+  clustering:
+    enabled: true
+    instance-id: "${HOSTNAME:consumer-local}"
+
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+      
+logging:
+  level:
+    com.nexusweaver: DEBUG
+    org.apache.camel: DEBUG
+
+consumer:
+  processing:
+    concurrent-consumers: 2  # Lower in dev
+
+---
+# Production profile  
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    com.nexusweaver: INFO
+    org.apache.camel: WARN
+    root: WARN
+
+consumer:
+  processing:
+    concurrent-consumers: 10  # Higher in production 

@@ -1,0 +1,53 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: nexus-rabbitmq
+  namespace: nexus-weaver
+spec:
+  replicas: 1  # Single node for development
+  image: rabbitmq:3.12-management
+  rabbitmq:
+    additionalConfig: |
+      # Enable RabbitMQ Streams
+      rabbitmq_stream.tcp_listen_options.nodelay = true
+      rabbitmq_stream.tcp_listen_options.keepalive = true
+      stream_max_segment_size_bytes = 50000000
+      # Optimize for low memory development
+      vm_memory_high_watermark.relative = 0.6
+      disk_free_limit.relative = 0.5
+      # Reduce memory usage
+      collect_statistics_interval = 30000
+    additionalPlugins:
+      - rabbitmq_stream
+      - rabbitmq_stream_management
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "200m"
+      memory: "512Mi"
+  persistence:
+    storageClassName: "local-path"
+    storage: 5Gi
+  service:
+    type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-streams
+  namespace: nexus-weaver
+spec:
+  selector:
+    app.kubernetes.io/name: nexus-rabbitmq
+  ports:
+  - name: stream
+    port: 5552
+    targetPort: 5552
+  - name: amqp
+    port: 5672
+    targetPort: 5672
+  - name: management
+    port: 15672
+    targetPort: 15672 

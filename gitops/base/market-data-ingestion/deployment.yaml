@@ -22,9 +22,10 @@ spec:
         prometheus.io/port: "8080"
         prometheus.io/path: "/actuator/prometheus"
     spec:
+      serviceAccountName: market-data-ingestion-sa
       containers:
       - name: market-data-ingestion
-        image: nexus-weaver/market-data-ingestion:latest
+        image: nexus-weaver/market-data-ingestion:clustered-v3
         ports:
         - containerPort: 8080
           name: http
@@ -37,6 +38,10 @@ spec:
           value: "dev"
         - name: JAVA_OPTS
           value: "-XX:MaxRAMPercentage=80.0 -XX:+UseG1GC"
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         resources:
           requests:
             memory: "256Mi"

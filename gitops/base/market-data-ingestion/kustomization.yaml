@@ -5,6 +5,7 @@ metadata:
   name: market-data-ingestion-base
 
 resources:
+- rbac.yaml
 - deployment.yaml
 - service.yaml
 
